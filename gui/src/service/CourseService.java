@@ -69,10 +69,10 @@ public class CourseService {
     return courses_list;
   }
 
-  public ObservableList<SubmissionView> getAllSubmission() throws SQLException {
+  public ObservableList<SubmissionView> getAllSubmissions(int id) throws SQLException {
     Statement stm = connection.createStatement();
 
-    ResultSet rs = stm.executeQuery("SELECT * FROM submission_view");
+    ResultSet rs = stm.executeQuery("SELECT * FROM submission_view WHERE email = (SELECT email FROM users WHERE id_u ="+id+")");
     ObservableList<SubmissionView> submission_list = FXCollections.observableArrayList();
     while (rs.next()) {
       SubmissionView sv = new SubmissionView(
