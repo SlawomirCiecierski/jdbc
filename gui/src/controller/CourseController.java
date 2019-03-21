@@ -79,7 +79,11 @@ public class CourseController {
   private Label lbl_submission_count;
 
   @FXML
-  void deleteAction(ActionEvent event) {
+  void deleteAction(ActionEvent event) throws SQLException {
+    int id_selected = tab_course.getSelectionModel().getSelectedItem().getId_s();
+      //serwis do usuwania na zapisu kurs na podstawie id_s
+    new CourseService().deleteMyselfFromCourse (id_selected);
+    initialize();
 
   }
 
@@ -91,28 +95,48 @@ public class CourseController {
 
   @FXML
   void logoutAction(ActionEvent event) throws IOException {
-    WindowService.showWindow("/view/loginWiev.fxml", "Panel logowania");
+    WindowService.showWindow("/view/loginView.fxml", "Panel logowania");
+    WindowService.closeWindow(lbl_course_count);
 
   }
 
   @FXML
-  void saveAction(ActionEvent event) {
+  void saveAction(ActionEvent event) throws SQLException {
+    //pobranie wartości zaznaczonej na combo
+    Courses courses = cb_save.getValue();
+    //wydobywa id_c z wybranej wartości na combo
+    int id_c = courses.getId_c();
+    //service do zapisu uzytkownika na kurs
+    new CourseService().saveUserOnCourse(LoginController.id_logged, id_c);
+    initialize();
+
 
   }
 
   @FXML
   void selectRowAction(MouseEvent event) {
+    //uaktywnienie przycisków
+    btn_delete.setDisable(false);
+    btn_update.setDisable(false);
 
   }
 
   @FXML
-  void updateAction(ActionEvent event) {
-
+  void updateAction(ActionEvent event) throws SQLException {
+int id_selected=tab_course.getSelectionModel().getSelectedItem().getId_s();
+//serwis do zmiany zapisu użytkownika na wybrany kurs
+    new CourseService().updateSubmission(id_selected,cb_update.getValue().getId_c());
+    initialize();
   }
 
   //wykonuje się na początku
   @FXML
   void initialize() throws SQLException {
+    //przyciski domyślnie disabled
+    btn_delete.setDisable(true);
+    btn_update.setDisable(true);
+
+
     CourseService courseService = new CourseService();
     System.out.println(LoginController.id_logged);
 
